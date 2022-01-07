@@ -12,4 +12,17 @@ public class Queue {
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
 
+    public Queue(int id, Point position) {
+        Id = id;
+        Position = position;
+        NumOfProducts = 0;
+        Products = new Stack<>();
+        Prev = null;
+        Next = null;
+    }
+
+    void AddProduct(Product product){
+        Products.add(product);
+    }
+
 }
