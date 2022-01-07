@@ -45,8 +45,4 @@ public class TreeNode {
         Parents.add(Node);
     }
 
-    void Connect(TreeNode Node1, TreeNode Node2){
-        Node1.AddSon(Node2);
-        Node2.AddParent(Node1);
-    }
 }

@@ -11,4 +11,14 @@ public class Machine {
     String Color;
     Queue Prev;
     Queue Next;
+
+    public Machine(int id, Point position) {
+        Id = id;
+        Position = position;
+        Available = true;
+        Color = null;
+        Prev = null;
+        Next = null;
+    }
+
 }
