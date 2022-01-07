@@ -21,4 +21,67 @@ public class Machine {
         Next = null;
     }
 
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public boolean isAvailable() {
+        return Available;
+    }
+
+    public void setAvailable(boolean available) {
+        Available = available;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public Point getPosition() {
+        return Position;
+    }
+
+    public void setPosition(Point position) {
+        Position = position;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
+    }
+
+    public Queue getPrev() {
+        return Prev;
+    }
+
+    public void setPrev(Queue prev) {
+        Prev = prev;
+    }
+
+    public Queue getNext() {
+        return Next;
+    }
+
+    public void setNext(Queue next) {
+        Next = next;
+    }
 }

@@ -22,9 +22,41 @@ public class Operations {
         }
     }
 
+    int GetQueue(int Id){
+        for (int i = 0;i < queues.size();i++){
+            if (queues.get(i).getId() == Id)
+                return i;
+        }
+        return -1;
+    }
+
+    int GetMachine(int Id){
+        for (int i = 0;i < machines.size();i++){
+            if (machines.get(i).getId() == Id)
+                return i;
+        }
+        return -1;
+    }
+
     void Connect(TreeNode Node1, TreeNode Node2){
         Node1.AddSon(Node2);
         Node2.AddParent(Node1);
+        if (Node1.getType() == 'Q'){
+            Queue Q = queues.get(GetQueue(Node1.Id));
+            Machine M = machines.get(GetMachine(Node2.Id));
+            M.setPrev(Q);
+            ArrayList<Machine> Next = Q.getNext();
+            Next.add(M);
+            Q.setNext(Next);
+        }
+        else if (Node1.getType() == 'M'){
+            Queue Q = queues.get(GetQueue(Node2.Id));
+            Machine M = machines.get(GetMachine(Node1.Id));
+            M.setNext(Q);
+            ArrayList<Machine> Previous = Q.getPrev();
+            Previous.add(M);
+            Q.setPrev(Previous);
+        }
+        else return;
     }
-
 }
