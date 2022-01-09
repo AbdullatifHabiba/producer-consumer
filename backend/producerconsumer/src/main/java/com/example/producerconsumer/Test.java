@@ -12,6 +12,7 @@ public class Test {
         O.Connect(1, 2);
         System.out.println(O.machines.get(0).getPrev().getId());
         System.out.println(O.queues.get(0).getNext().get(0).getId());
+        System.out.println(O.Tree.get(1).getParents().get(0).getType());
 
     }
 }

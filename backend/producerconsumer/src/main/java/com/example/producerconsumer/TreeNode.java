@@ -1,8 +1,10 @@
 package com.example.producerconsumer;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class TreeNode {
+public class TreeNode implements Observer {
     int Id;
     ArrayList<TreeNode> Sons;
     ArrayList<TreeNode> Parents;
@@ -47,4 +49,8 @@ public class TreeNode {
         Parents.add(Node);
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
 }

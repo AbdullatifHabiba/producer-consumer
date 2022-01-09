@@ -2,9 +2,11 @@ package com.example.producerconsumer;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Stack;
 
-public class Queue {
+public class Queue implements Observer {
     int Id;
     int NumOfProducts;
     Stack<Product> Products;
@@ -79,5 +81,10 @@ public class Queue {
 
     void AddPrev(Machine M){
         Prev.add(M);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

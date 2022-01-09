@@ -1,8 +1,10 @@
 package com.example.producerconsumer;
 
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Machine {
+public class Machine implements Observer {
     private int Id;
     private boolean Available;
     private int min = 1000;
@@ -85,5 +87,10 @@ public class Machine {
 
     public void setNext(Queue next) {
         this.Next = next;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

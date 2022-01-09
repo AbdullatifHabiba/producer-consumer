@@ -2,8 +2,9 @@ package com.example.producerconsumer;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class Operations {
+public class Operations extends Observable {
     ArrayList<Queue> queues = new ArrayList<>();
     ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
@@ -55,9 +56,9 @@ public class Operations {
         return -1;
     }
 
-    void Connect(int N1, int N2){
-        int node1 = GetNode(N1);
-        int node2 = GetNode(N2);
+    void Connect(int Id1, int Id2){
+        int node1 = GetNode(Id1);
+        int node2 = GetNode(Id2);
         TreeNode Node1 = Tree.get(node1);
         TreeNode Node2 = Tree.get(node2);
         Node1.AddSon(Node2);
