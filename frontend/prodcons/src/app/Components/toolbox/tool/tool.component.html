@@ -1,0 +1,9 @@
+<div class="tool"
+    [class.selected]="currentTool.name == toolName"
+    (click)="toolClicked()">
+
+  
+    <i *ngIf="iconLibrary=='material'" class="material-icons" >{{iconName}}</i>
+    <i *ngIf="iconLibrary=='fontawesome'" class="fas" [ngClass]="iconName"></i>
+
+</div>

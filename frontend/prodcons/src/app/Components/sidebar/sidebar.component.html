@@ -1,0 +1,99 @@
+<div class="form">
+
+  <ng-template [ngIf]=" selectedTool.name == 'select' ">
+
+    <ng-template [ngIf]="isAnyShapeSelected()" [ngIfElse]="selectTitle">
+      <p class="paragraph">Drag shape to reposition</p>
+
+
+      <ng-template [ngIf]= "getSelectedShape().shapeType == 'rectangle'">
+
+        <div class="input-container ic1">
+          <input type="text" id="width" class="input" [(ngModel)]="properties.width"/>
+          <div class="cut"></div>
+          <label for="width" class="placeholder">Width</label>
+        </div>
+
+        <div class="input-container ic2">
+          <input id="height" class="input" type="text" [(ngModel)]="properties.height"/>
+          <div class="cut"></div>
+          <label for="height" class="placeholder">Height</label>
+
+        </div>
+        <button class="button" (click)="addsh()">link by machine</button>
+
+
+      </ng-template>
+
+
+      <ng-template [ngIf]=
+            "getSelectedShape().shapeType == 'circle'">
+        <div class="input-container ic1">
+          <input type="text" id="radius" class="input" [(ngModel)]="properties.radius"/>
+          <div class="cut"></div>
+          <label for="radius" class="placeholder">Radius</label>
+        </div>
+        <button class="button" (click)="addsh()">link by queue</button>
+
+      </ng-template>
+
+
+
+     <!--customShape-->
+
+
+    <button class="button" (click)="deleteShape()">Delete Shape</button>
+
+
+    </ng-template>
+
+    <ng-template #selectTitle>
+      <div class="title" >Select Shape</div>
+    </ng-template>
+
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'rectangle' ">
+    <div class="title">Create queue</div>
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'circle' ">
+    <div class="title">Create machine</div>
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'ellipse' ">
+    <div class="title">select the first queue</div>
+
+
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'customShape' ">
+    <div class="title">enter # of products</div>
+
+    <input type="number"  [(ngModel)]="num" />
+    <button class="button" (click)="getnum()">Ok</button>
+
+  </ng-template>
+  <ng-template [ngIf]=" selectedTool.name == 'line' ">
+    <div class="title">link</div>
+
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'replay' ">
+    <button class="button" (click)="replay()">Replay</button>
+
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'Start' ">
+
+    <button class="button" (click)="Startsimulate()">Start</button>
+  </ng-template>
+
+  <ng-template [ngIf]=" selectedTool.name == 'Stop' ">
+
+    <button class="button" (click)="stop()">stop</button>
+  </ng-template>
+
+
+</div>
+

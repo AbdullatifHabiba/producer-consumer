@@ -1,0 +1,65 @@
+<div id="canvas" (click)="canvasClicked($event)" (mousedown)="mouseDownHandler($event)">
+    <svg>
+      <!--cdkDrag [cdkDragDisabled]="isSelectionTool()"-->
+        <g *ngFor="let shape of shapes" >
+
+            <g [ngSwitch]="shape.shapeType"
+               stroke="shape.color"
+                [ngClass]="shape.isSelected ? 'shapeSelected' : '' "
+                (click)="shapeClicked($event, shape)">
+
+                <rect *ngSwitchCase = " 'rectangle' "
+                    [attr.width]="shape.width"
+                    [attr.height]="shape.height"
+                    [attr.x]="shape.position.x"
+                    [attr.y]="shape.position.y"
+                    [attr.fill]="shape.color"
+                    [attr.stroke]="black"
+                    />
+
+                <circle *ngSwitchCase = " 'circle' "
+                    [attr.cx]="shape.position.x"
+                    [attr.cy]="shape.position.y"
+                    [attr.r]="shape.radius!"
+                    [attr.fill]="shape.color"
+                    [attr.stroke]="black"
+
+                    />
+
+
+
+
+
+
+
+
+            </g>
+        </g>
+
+         <g  *ngFor="let link of Links">
+          <g [ngSwitch]="link.sh1.shapeType "                 [ngClass]="linkisselected ? 'shapeSelected' : '' "
+          (click)="linkClicked($event, link)">
+          <line *ngSwitchCase = " 'circle' "
+          [attr.x1]="link.sh1.position.x"
+          [attr.y1]="link.sh1.position.y"
+          [attr.x2]="link.sh2.position.x+(link.sh2.width)!/2"
+          [attr.y2]="link.sh2.position.y+(link.sh2.height)!/2"
+          [attr.stroke]="black"/>
+          <line *ngSwitchCase = " 'rectangle' "
+          [attr.x1]="link.sh1.position.x+(link.sh1.width)!/2"
+          [attr.y1]="link.sh1.position.y+(link.sh1.height)!/2"
+          [attr.x2]="link.sh2.position.x"
+          [attr.y2]="link.sh2.position.y"
+          [attr.stroke]="black"/>
+          <text     />
+         </g>
+       </g>
+
+        <circle *ngFor="let dot of dots"
+            fill="black"
+            r="5"
+            [attr.cx]="500"
+            [attr.cy]="100" />
+
+    </svg>
+</div>

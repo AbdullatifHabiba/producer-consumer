@@ -1,0 +1,24 @@
+/* #2A265F */
+
+.toolbox {
+  width: inherit;  
+  min-width: 50px;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #161853;
+}
+
+.colorPicker {
+  width: 2.2rem;
+  height: 2.2rem;
+  box-shadow: none;
+  border: 1px solid white;
+
+  margin-top: auto;
+}
