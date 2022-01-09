@@ -17,8 +17,8 @@ public class Queue {
         Position = position;
         NumOfProducts = 0;
         Products = new Stack<>();
-        Prev = null;
-        Next = null;
+        Prev = new ArrayList<>();
+        Next = new ArrayList<>();
     }
 
     public int getId() {
@@ -73,4 +73,11 @@ public class Queue {
         Products.add(product);
     }
 
+    void AddNext(Machine M){
+        Next.add(M);
+    }
+
+    void AddPrev(Machine M){
+        Prev.add(M);
+    }
 }

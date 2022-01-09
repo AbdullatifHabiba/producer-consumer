@@ -11,6 +11,8 @@ public class TreeNode {
     public TreeNode(int id, char type) {
         Id = id;
         Type = type;
+        Sons = new ArrayList<>();
+        Parents = new ArrayList<>();
     }
 
     public ArrayList<TreeNode> getSons() {

@@ -4,9 +4,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Operations {
-    ArrayList<Queue> queues;
-    ArrayList<Machine> machines;
-    ArrayList<TreeNode> Tree;
+    ArrayList<Queue> queues = new ArrayList<>();
+    ArrayList<Machine> machines = new ArrayList<>();
+    ArrayList<TreeNode> Tree = new ArrayList<>();
     int HeadNode;
 
     void AddNode(int Id, char Type, Point Position){
@@ -68,17 +68,13 @@ public class Operations {
             Queue Q = queues.get(GetQueue(Node1.Id));
             Machine M = machines.get(GetMachine(Node2.Id));
             M.setPrev(Q);
-            ArrayList<Machine> Next = Q.getNext();
-            Next.add(M);
-            Q.setNext(Next);
+            Q.AddNext(M);
         }
         else if (Node1.getType() == 'M'){
             Queue Q = queues.get(GetQueue(Node2.Id));
             Machine M = machines.get(GetMachine(Node1.Id));
             M.setNext(Q);
-            ArrayList<Machine> Previous = Q.getPrev();
-            Previous.add(M);
-            Q.setPrev(Previous);
+            Q.AddPrev(M);
         }
         else return;
     }

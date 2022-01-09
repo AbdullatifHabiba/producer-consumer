@@ -3,42 +3,44 @@ package com.example.producerconsumer;
 import java.awt.*;
 
 public class Machine {
-    int Id;
-    boolean Available;
-    int min = 1000;
-    int max = 18000;
-    Point Position;
-    String Color;
-    Queue Prev;
-    Queue Next;
+    private int Id;
+    private boolean Available;
+    private int min = 1000;
+    private int max = 18000;
+    private Point Position;
+    private String Color;
+    private Queue Prev;
+    private Queue Next;
 
     public Machine(int id, Point position) {
-        Id = id;
-        Position = position;
-        Available = true;
-        Color = null;
-        Prev = null;
-        Next = null;
+        this.Id = id;
+        this.Position = position;
+        this.Available = true;
+        this.min = 1000;
+        this.max = 18000;
+        this.Prev = new Queue(0, new Point(0, 0));
+        this.Next = new Queue(0, new Point(0, 0));
+        this.Color = "";
     }
 
     public int getId() {
-        return Id;
+        return this.Id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.Id = id;
     }
 
     public boolean isAvailable() {
-        return Available;
+        return this.Available;
     }
 
     public void setAvailable(boolean available) {
-        Available = available;
+        this.Available = available;
     }
 
     public int getMin() {
-        return min;
+        return this.min;
     }
 
     public void setMin(int min) {
@@ -46,7 +48,7 @@ public class Machine {
     }
 
     public int getMax() {
-        return max;
+        return this.max;
     }
 
     public void setMax(int max) {
@@ -54,34 +56,34 @@ public class Machine {
     }
 
     public Point getPosition() {
-        return Position;
+        return this.Position;
     }
 
     public void setPosition(Point position) {
-        Position = position;
+        this.Position = position;
     }
 
     public String getColor() {
-        return Color;
+        return this.Color;
     }
 
     public void setColor(String color) {
-        Color = color;
+        this.Color = color;
     }
 
     public Queue getPrev() {
-        return Prev;
+        return this.Prev;
     }
 
     public void setPrev(Queue prev) {
-        Prev = prev;
+        this.Prev = prev;
     }
 
     public Queue getNext() {
-        return Next;
+        return this.Next;
     }
 
     public void setNext(Queue next) {
-        Next = next;
+        this.Next = next;
     }
 }
