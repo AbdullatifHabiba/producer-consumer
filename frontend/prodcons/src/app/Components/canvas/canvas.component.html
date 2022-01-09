@@ -25,6 +25,14 @@
                     [attr.stroke]="black"
 
                     />
+                    <text *ngSwitchCase = " 'circle' "
+                    fill="#ddd" font-size="30" font-family="Verdana"
+                     [attr.x]="shape.position.x-6"
+                     [attr.y]="shape.position.y+4">{{shape.id}}</text>
+                     <text *ngSwitchCase = " 'rectangle' "
+                     fill="#ddd" font-size="30" font-family="Verdana"
+                      [attr.x]="shape.position.x-6+(shape.width)!/2"
+                      [attr.y]="shape.position.y+4+(shape.height)!/2">{{shape.id}}</text>
 
 
 

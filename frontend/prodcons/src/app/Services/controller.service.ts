@@ -230,8 +230,8 @@ return ch;
             x: point1.x < point2.x ? point1.x : point2.x,
             y: point1.y < point2.y ? point1.y : point2.y,
           },
-          width: Math.abs(point2.x - point1.x),
-          height: Math.abs(point2.y - point1.y),
+          width:120 ,//Math.abs(point2.x - point1.x),
+          height:60 //Math.abs(point2.y - point1.y),
         };
 
         this.shapeService.addShapePrototype(shape);
@@ -245,10 +245,10 @@ return ch;
             x: point1.x,
             y: point1.y,
           },
-          radius:
-            Math.abs(point2.x - point1.x) > Math.abs(point2.y - point1.y)
+          radius:50
+          /*  Math.abs(point2.x - point1.x) > Math.abs(point2.y - point1.y)
               ? Math.abs(point2.x - point1.x)
-              : Math.abs(point2.y - point1.y),
+              : Math.abs(point2.y - point1.y),*/
         };
 
         this.shapeService.addShapePrototype(shape);

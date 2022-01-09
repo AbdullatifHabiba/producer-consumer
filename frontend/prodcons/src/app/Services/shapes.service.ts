@@ -1,6 +1,7 @@
 import { Link } from './../Components/canvas/Link';
 import { Shape } from '../Shape';
 import { Product } from '../product';
+import { ThisReceiver } from '@angular/compiler';
 
 export class ShapesService {
   shapes: Shape[] = [];
@@ -55,7 +56,9 @@ export class ShapesService {
     }
 
     this.shapes.splice(index, 1);
+
     this.shapes.forEach((sha)=>{sha.id=this.shapes.indexOf(sha);})
+    this.currentID-=1;
     console.log("shapes",this.shapes)
 
     this.unSelectAll();

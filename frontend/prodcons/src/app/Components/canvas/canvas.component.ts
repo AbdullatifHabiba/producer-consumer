@@ -62,7 +62,6 @@ lx:number=0;ly:number=0;l2x:number=0;l2y:number=0;
     return this.controller.currentTool.name == 'select';
   }
   black="black"
-  red=new Rgba(0,200,0,1)
 
   startingPosition = {x:0, y:0};
   mouseMoveRef: Function = () => {};
