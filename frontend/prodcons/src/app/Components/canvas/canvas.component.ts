@@ -5,8 +5,7 @@ import { Shape } from '../../Shape';
 import { ShapesService } from '../../Services/shapes.service';
 import { ControllerService } from 'src/app/Services/controller.service';
 import { MousePosition } from 'src/app/MousePosition';
-import { windowToggle } from 'rxjs';
-import { Rgba } from 'ngx-color-picker';
+
 
 @Component({
   selector: 'app-canvas',
@@ -28,9 +27,10 @@ export class CanvasComponent implements OnInit {
     this.shapes = this.shapesService.shapes;
      this.dots=this.shapesService.Products;
   }
-
+  canvasClick(event: MouseEvent) {      this.shapesService.unSelectAll();
+  }
   canvasClicked(event: MouseEvent) {
-    if (this.controller.currentTool.name == 'select') {
+    if (this.controller.currentTool.name == 'select'||this.controller.currentTool.name == 'line') {
       this.controller.resetShapePoints();
     }
   }

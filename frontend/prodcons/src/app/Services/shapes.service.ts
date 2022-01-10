@@ -41,19 +41,20 @@ export class ShapesService {
     var li;
     for(let lin of this.links)
     {
-     if(lin.sh1.id==ind || lin.sh2.id==ind)
+     if(lin.sh1==this.selectedShape || lin.sh2.id==this.selectedShape.id)
      {
-       console.log("deleted");
+      console.log("find");
 
        li=  this.links.indexOf(lin);
+       console.log("deleted",li);
 
        this.links.splice(li,1)
      }
-     console.log("links",this.links)
 
 
 
     }
+    console.log("links",this.links)
 
     this.shapes.splice(index, 1);
 
