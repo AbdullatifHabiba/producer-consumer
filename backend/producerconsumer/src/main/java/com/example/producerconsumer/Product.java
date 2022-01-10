@@ -24,4 +24,9 @@ public class Product {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public void process() throws InterruptedException {
+        System.out.println("product");
+        Thread.sleep(5000);
+    }
 }

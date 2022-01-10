@@ -59,22 +59,28 @@ export class ControllerService {
            return
 
         }
-        if (this.lineposition.length>0){
+        if (this.lineposition.length==1){
 
-          if(this.lineposition[this.lineposition.length-1].shapeType==shape.shapeType){ console.log("you can't with same shape");return;}
+          if(this.lineposition[this.lineposition.length-1].shapeType==shape.shapeType){
+            window.alert("you can't with same shape")
+            console.log("you can't with same shape");this.lineposition=[];return;}
           else{
           this.lineposition.push(shape);
 
 
           }
         }
-        if(this.lineposition.length>=2){
-          let l={sh1:this.lineposition[this.lineposition.length-2],sh2:this.lineposition[this.lineposition.length-1]};
-          if(this.checklink(l)){ console.log("last link");   this.lineposition.slice(0,this.lineposition.length);
+        if(this.lineposition.length==2){
+          let l={sh1:this.lineposition[0],sh2:this.lineposition[1]};
+          if(this.checklink(l)){            window.alert("you can't with same shape")
+          console.log("last link");  this.lineposition=[]
+
           return;}
            console.log(l);
           this.shapeService.links.push(l)
-           this.lineposition.slice(0,this.lineposition.length);
+           this.lineposition=[]
+           console.log("li",this.lineposition);
+
 
 
 
@@ -117,26 +123,6 @@ return ch;
     this.shapePoints = [];
   }
 
-  makeCustomShape() {
-    let points = '';
-    for (let i = 0; i < this.shapePoints.length; i++) {
-      let currentPoint: string =
-        this.shapePoints[i].x.toString() +
-        ',' +
-        this.shapePoints[i].y.toString() +
-        ' ';
-      points = points.concat(currentPoint);
-    }
-
-    const shape = {
-      shapeType: 'customShape',
-      points: points,
-      isSelected: false,
-    };
-
-    this.shapeService.addShape(shape);
-    this.resetShapePoints();
-  }
 
 
 
@@ -255,31 +241,8 @@ return ch;
         break;
       }
 
-      case 'ellipse': {
-        let shape = {
-          shapeType: 'ellipse',
-          position: {
-            x: (point1.x + point2.x) / 2,
-            y: (point1.y + point2.y) / 2,
-          },
-          radiusX: Math.abs(point1.x - point2.x) / 2,
-          radiusY: Math.abs(point1.y - point2.y) / 2,
-        };
 
-        this.shapeService.addShapePrototype(shape);
-        break;
-      }
 
-      case 'line': {
-        let shape = {
-          shapeType: 'line',
-          position: point1,
-          secondPosition: point2,
-        };
-
-        this.shapeService.addShapePrototype(shape);
-        break;
-      }
     }
   }
 

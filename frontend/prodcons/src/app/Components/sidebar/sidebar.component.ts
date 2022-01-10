@@ -26,7 +26,6 @@ export class SidebarComponent implements OnInit {
 
 
   selectedTool = {"name":""};
-  pathfile='';
 
 
   constructor(private controller : ControllerService,
@@ -40,9 +39,7 @@ export class SidebarComponent implements OnInit {
     this.controller.makeline=true;
   }
 
-  confirmShape() {
-    this.controller.makeCustomShape();
-  }
+
 
   getSelectedShape() : Shape {
     this.properties = this.shapeService.getSelectedShape()!;
@@ -60,10 +57,7 @@ export class SidebarComponent implements OnInit {
     this.shapeService.deleteSelectedShape();
   }
 
-  cloneShape() {
-    console.log(this.shapeService.getSelectedShape()!.id);
-    // TODO Make http request
-  }
+  
 
   Startsimulate() {
     //this.controller.load(this.pathfile);

@@ -50,7 +50,7 @@ public class Pmachine implements Runnable{
                 if (temp != null) {
                     Thread.sleep(intervalSimulation);
 
-                    System.out.println(temp.Number+"    "+producer.name+" the machine" + number);
+                    System.out.println(temp+"    "+producer.name+" the machine" + number);
                     System.out.println("- -- - -- - - - - -- -");
                     if(output!=null){
                         this.output.sendToMachine(temp);
