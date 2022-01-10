@@ -11,7 +11,7 @@ public class Originator {
         this.state = state;
     }
 
-    public Momento saveStateToMomento(Momento momento){
+    public Momento saveStateToMomento(){
         return new Momento(state);
     }
 

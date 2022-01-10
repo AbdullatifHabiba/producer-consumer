@@ -152,5 +152,10 @@ public class Operations extends Observable {
                     break;
             }
         }
+        String state = "" + positions[0];
+        for (int i = 0;i < positions.length - 1;i ++)
+            state = state + "," + positions[i + 1];
+        originator.setState(state);
+        careTaker.add(originator.saveStateToMomento());
     }
 }
