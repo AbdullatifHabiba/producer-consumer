@@ -1,14 +1,22 @@
 package com.example.producerconsumer;
 
+import com.example.producerconsumer.SnapShot.CareTaker;
+import com.example.producerconsumer.SnapShot.Momento;
+import com.example.producerconsumer.SnapShot.Originator;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
 
 public class Operations extends Observable {
+    Originator originator = new Originator();
+    CareTaker careTaker = new CareTaker();
+
     ArrayList<Queue> queues = new ArrayList<>();
     ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
+    ArrayList<Product> products = new ArrayList<>();
     int HeadNode;
 
     void AddNode(int Id, char Type, Point Position){
@@ -115,6 +123,34 @@ public class Operations extends Observable {
                 break;
             default:
                 break;
+        }
+    }
+
+    int GetProduct(String Color){
+        for (int i = 0;i < products.size();i++){
+            if (products.get(i).getColor().equalsIgnoreCase(Color))
+                return i;
+        }
+        return -1;
+    }
+    void SaveMomento(){
+        int[] positions = new int[products.size()];
+        for (int i = 0;i < Tree.size();i++){
+            switch (Tree.get(i).getType()){
+                case 'M':
+                    if (!machines.get(GetMachine(Tree.get(i).getId())).isAvailable())
+                        positions[GetProduct(machines.get(GetMachine(Tree.get(i).getId())).getColor())] = Tree.get(i).getId();
+                    break;
+                case 'Q':
+                    if (!queues.get(GetQueue(Tree.get(i).getId())).getProducts().isEmpty()){
+                        for (int k = 0;k < queues.get(GetQueue(Tree.get(i).getId())).getProducts().size();k++){
+                            positions[GetProduct(queues.get(GetQueue(Tree.get(i).getId())).getProducts().get(k).getColor())] = Tree.get(i).getId();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
