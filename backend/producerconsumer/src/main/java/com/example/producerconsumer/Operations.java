@@ -3,6 +3,7 @@ package com.example.producerconsumer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Stack;
 
 public class Operations extends Observable {
     ArrayList<Queue> queues = new ArrayList<>();
@@ -78,5 +79,42 @@ public class Operations extends Observable {
             Q.AddPrev(M);
         }
         else return;
+    }
+
+    void ProduceProduct(Product product, int MachineId) {
+        if (machines.get(GetMachine(MachineId)).isAvailable()) {
+            machines.get(GetMachine(MachineId)).setColor(product.getColor());
+            machines.get(GetMachine(MachineId)).setAvailable(false);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            machines.get(GetMachine(MachineId)).setColor("");
+            machines.get(GetMachine(MachineId)).setAvailable(true);
+            Queue queue = machines.get(GetMachine(MachineId)).getNext();
+            queue.AddProduct(product);
+            queues.set(GetQueue(queue.getId()), queue);
+        }
+    }
+
+    void MoveProduct(int Id) {
+        switch (Tree.get(GetNode(Id)).getType()) {
+            case 'M':
+                Machine machine = machines.get(GetMachine(Id));
+                Stack<Product> products = machine.getPrev().getProducts();
+                while (!products.isEmpty()) {
+                    ProduceProduct(products.pop(), machine.getId());
+                    products = machine.getPrev().getProducts();
+                }
+                break;
+            case 'Q':
+                for (int i = 0;i < queues.get(GetQueue(Id)).getNext().size();i++){
+                    MoveProduct(queues.get(GetQueue(Id)).getNext().get(i).getId());
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
