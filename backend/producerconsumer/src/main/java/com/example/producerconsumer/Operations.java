@@ -1,9 +1,7 @@
 package com.example.producerconsumer;
 
 import com.example.producerconsumer.SnapShot.CareTaker;
-import com.example.producerconsumer.SnapShot.Momento;
 import com.example.producerconsumer.SnapShot.Originator;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -11,21 +9,30 @@ import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class Operations implements Runnable {
+
+public class Operations extends Observable {
     Originator originator = new Originator();
     CareTaker careTaker = new CareTaker();
 
-    ArrayList<Queue> queues = new ArrayList<>();
+    ArrayList<QueueofProducts> queues = new ArrayList<>();
     ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
     int HeadNode;
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
     void AddNode(int Id, char Type, Point Position){
         Tree.add(new TreeNode(Id, Type));
         switch (Type){
             case 'Q':
-                queues.add(new Queue(Id, Position));
+                queues.add(new QueueofProducts(Id, Position));
                 break;
             case 'M':
                 machines.add(new Machine(Id, Position));
@@ -77,13 +84,13 @@ public class Operations implements Runnable {
         Tree.set(node1, Node1);
         Tree.set(node2, Node2);
         if (Node1.getType() == 'Q'){
-            Queue Q = queues.get(GetQueue(Node1.Id));
+            QueueofProducts Q = queues.get(GetQueue(Node1.Id));
             Machine M = machines.get(GetMachine(Node2.Id));
             M.setPrev(Q);
             Q.AddNext(M);
         }
         else if (Node1.getType() == 'M'){
-            Queue Q = queues.get(GetQueue(Node2.Id));
+            QueueofProducts Q = queues.get(GetQueue(Node2.Id));
             Machine M = machines.get(GetMachine(Node1.Id));
             M.setNext(Q);
             Q.AddPrev(M);
@@ -91,10 +98,7 @@ public class Operations implements Runnable {
         else return;
     }
 
-    @Override
-    public void run() {
 
-    }
 
     synchronized void ProduceProduct(Product product, int MachineId) {
         if (machines.get(GetMachine(MachineId)).isAvailable()) {
@@ -104,14 +108,18 @@ public class Operations implements Runnable {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+
                 Thread.currentThread().interrupt();            }
 
+            }
+            SaveMomento();
             machines.get(GetMachine(MachineId)).setColor("");
             machines.get(GetMachine(MachineId)).setAvailable(true);
-            Queue queue = machines.get(GetMachine(MachineId)).getNext();
+            QueueofProducts queue = machines.get(GetMachine(MachineId)).getNext();
             queue.AddProduct(product);
             queues.set(GetQueue(queue.getId()), queue);
-        }
+
+        SaveMomento();
     }
 
     synchronized void MoveProduct(int Id) {
@@ -134,6 +142,7 @@ public class Operations implements Runnable {
             default:
                 break;
         }
+        SaveMomento();
     }
 
     int GetProduct(String Color){
@@ -165,6 +174,7 @@ public class Operations implements Runnable {
         String state = "" + positions[0];
         for (int i = 0;i < positions.length - 1;i ++)
             state = state + "," + positions[i + 1];
+        System.out.println(state);
         originator.setState(state);
         careTaker.add(originator.saveStateToMomento());
     }

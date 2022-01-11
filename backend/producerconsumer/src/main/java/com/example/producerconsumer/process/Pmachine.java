@@ -6,55 +6,62 @@ import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class Pmachine implements Runnable{
-    boolean Available =true;
+public class Pmachine implements Runnable {
+    boolean Available = true;
     int min = 1000;// 2 seconds
     int max = 18000;// 10 seconds
     long intervalSimulation;
     Producer producer;
-    Producer output ;
+    Producer output;
     Stack<Product> stack;
     boolean finalOutput = false;
 
+
     int number ;
     private BlockingQueue<Product > productsQueue;
+
+    //Stack<Integer> ending = new Stack<Integer>();
+
     private volatile boolean keepProcessing;
-    Pmachine(BlockingQueue<Product> products){
-        this.productsQueue=products;
+
+    Pmachine(BlockingQueue<Product> products) {
+        this.productsQueue = products;
     }
-    Pmachine(long time){
-        this.intervalSimulation=time;
+
+    Pmachine(long time) {
+        this.intervalSimulation = time;
         System.out.println(intervalSimulation);
         //this.ending = ending;
     }
-    public void setOutput(Producer producer){
-        this.output=producer;
+
+    public void setOutput(Producer producer) {
+        this.output = producer;
     }
+
     public void setProductsQueue(BlockingQueue<Product> productsQueue) {
         this.productsQueue = productsQueue;
     }
-    public void setFinalOutput(Stack<Product> stack){
-        this.stack=stack;
+
+    public void setFinalOutput(Stack<Product> stack) {
+        this.stack = stack;
         finalOutput = true;
     }
 
-
     @Override
     public synchronized void run() {
-        System.out.println("the machine"+number);
+        System.out.println("the machine" + number);
         while (!productsQueue.isEmpty()) {
             try {
                 //Available =false;
                 Product temp = productsQueue.poll(1, TimeUnit.SECONDS);
                 if (temp != null) {
                     Thread.sleep(intervalSimulation);
-
-                    System.out.println(temp+"    "+producer.name+" the machine" + number);
+                    System.out.println(temp + "    " + producer.name + " the machine" + number);
                     System.out.println("- -- - -- - - - - -- -");
-                    if(output!=null){
+                    if (output != null) {
                         this.output.sendToMachine(temp);
                     }
-                    if (finalOutput){
+                    if (finalOutput) {
                         this.stack.push(temp);
                     }
                 }
@@ -63,21 +70,20 @@ public class Pmachine implements Runnable{
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
-
         }
         notifyProducers();
         //this.cancelExecution();
-
-    }
-    public synchronized void notifyProducers(){
-        this.Available =true;
     }
 
-    public void setProducer(Producer producer){
-        this.producer=producer;
+    public synchronized void notifyProducers() {
+        this.Available = true;
     }
-    public void cancelExecution()
-    {
+
+    public void setProducer(Producer producer) {
+        this.producer = producer;
+    }
+
+    public void cancelExecution() {
         this.keepProcessing = false;
     }
 }
