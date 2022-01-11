@@ -11,8 +11,8 @@ public class Machine implements Observer {
     private int max = 18000;
     private Point Position;
     private String Color;
-    private Queue Prev;
-    private Queue Next;
+    private QueueofProducts Prev;
+    private QueueofProducts Next;
 
     public Machine(int id, Point position) {
         this.Id = id;
@@ -20,8 +20,8 @@ public class Machine implements Observer {
         this.Available = true;
         this.min = 1000;
         this.max = 18000;
-        this.Prev = new Queue(0, new Point(0, 0));
-        this.Next = new Queue(0, new Point(0, 0));
+        this.Prev = new QueueofProducts(0, new Point(0, 0));
+        this.Next = new QueueofProducts(0, new Point(0, 0));
         this.Color = "";
     }
 
@@ -73,19 +73,19 @@ public class Machine implements Observer {
         this.Color = color;
     }
 
-    public Queue getPrev() {
+    public QueueofProducts getPrev() {
         return this.Prev;
     }
 
-    public void setPrev(Queue prev) {
+    public void setPrev(QueueofProducts prev) {
         this.Prev = prev;
     }
 
-    public Queue getNext() {
+    public QueueofProducts getNext() {
         return this.Next;
     }
 
-    public void setNext(Queue next) {
+    public void setNext(QueueofProducts next) {
         this.Next = next;
     }
 

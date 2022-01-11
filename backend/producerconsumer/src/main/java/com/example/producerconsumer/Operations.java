@@ -11,7 +11,7 @@ public class Operations/* extends Observable */{
     Originator originator = new Originator();
     CareTaker careTaker = new CareTaker();
 
-    ArrayList<Queue> queues = new ArrayList<>();
+    ArrayList<QueueofProducts> queues = new ArrayList<>();
     ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
@@ -29,7 +29,7 @@ public class Operations/* extends Observable */{
         Tree.add(new TreeNode(Id, Type));
         switch (Type){
             case 'Q':
-                queues.add(new Queue(Id, Position));
+                queues.add(new QueueofProducts(Id, Position));
                 break;
             case 'M':
                 machines.add(new Machine(Id, Position));
@@ -81,20 +81,16 @@ public class Operations/* extends Observable */{
         Tree.set(node1, Node1);
         Tree.set(node2, Node2);
         if (Node1.getType() == 'Q'){
-            Queue Q = queues.get(GetQueue(Node1.Id));
+            QueueofProducts Q = queues.get(GetQueue(Node1.Id));
             Machine M = machines.get(GetMachine(Node2.Id));
             M.setPrev(Q);
             Q.AddNext(M);
-            //queues.set(GetQueue(Node2.Id), Q);
-            //machines.set(GetMachine(Node1.Id), M);
         }
         else if (Node1.getType() == 'M'){
-            Queue Q = queues.get(GetQueue(Node2.Id));
+            QueueofProducts Q = queues.get(GetQueue(Node2.Id));
             Machine M = machines.get(GetMachine(Node1.Id));
             M.setNext(Q);
             Q.AddPrev(M);
-            //queues.set(GetQueue(Node2.Id), Q);
-            //machines.set(GetMachine(Node1.Id), M);
         }
         else return;
     }
@@ -111,7 +107,7 @@ public class Operations/* extends Observable */{
             SaveMomento();
             machines.get(GetMachine(MachineId)).setColor("");
             machines.get(GetMachine(MachineId)).setAvailable(true);
-            Queue queue = machines.get(GetMachine(MachineId)).getNext();
+            QueueofProducts queue = machines.get(GetMachine(MachineId)).getNext();
             queue.AddProduct(product);
             queues.set(GetQueue(queue.getId()), queue);
         }

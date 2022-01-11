@@ -5,19 +5,19 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Queue implements Observer {
+public class QueueofProducts implements Observer {
     int Id;
     int NumOfProducts;
-    Stack<Product> Products;
+    Queue<Product> Products;
     Point Position;
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
 
-    public Queue(int id, Point position) {
+    public QueueofProducts(int id, Point position) {
         Id = id;
         Position = position;
         NumOfProducts = 0;
-        Products = new Stack<Product>();
+        Products = new Queue<>();
         Prev = new ArrayList<>();
         Next = new ArrayList<>();
     }
