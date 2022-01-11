@@ -3,7 +3,7 @@ package com.example.producerconsumer;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
-public class Machine implements Observer {
+public class Machine implements Runnable {
 
 private int Id;
 private boolean Available;
@@ -13,6 +13,10 @@ private Point Position;
 private String Color;
 private QueueofProducts Prev;
 private QueueofProducts Next;
+private Thread thread;
+private volatile boolean run = true;
+private volatile Product currentProduct;
+boolean ready = true;
 
 public Machine(int id, Point position) {
         this.Id = id;
@@ -23,6 +27,7 @@ public Machine(int id, Point position) {
         this.Prev = new QueueofProducts(0, new Point(0, 0));
         this.Next = new QueueofProducts(0, new Point(0, 0));
         this.Color = "";
+        thread = new Thread( this, "M" +id);
         }
 
 public int getId() {
@@ -89,8 +94,92 @@ public void setNext(QueueofProducts next) {
         this.Next = next;
         }
 
-@Override
-public void update(Observable o, Object arg) {
+
+
+        public synchronized void addProductToMachine(Product currentProduct , QueueofProducts queue ) {
+                this.currentProduct = currentProduct;
+                this.setBusyState();
+                notify();
+        }
+
+        public void start(){
+                try {
+                        Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                        e.printStackTrace();
+                }
+                this.thread.start();
+                System.out.println(thread.getName() + " started");
+                System.out.println("machine time : " +  this.max);
+        }
+
+
+        public void run() {
+                synchronized (this){
+                        while(!this.thread.isInterrupted()){
+                                while( this.currentProduct == null ){
+                                        try { wait(); } catch (InterruptedException e) { break;
+                                        }
+                                }
+                                if(!this.run){
+                                        break;
+                                }
+                                this.consumeProduct();
+                                this.passProductToQueue();
+                                this.checkWaitingProducts();
+                                System.out.println(this.getColor() + " : "+ thread.getName());
+                        }
+                }
 
         }
+
+        public synchronized void shut(){
+                synchronized (this.thread){
+                        this.run=false;
+                        System.out.println(this.thread.getName()+" is terminated");
+                        this.thread.interrupt();
+                        //this.thread.notify();
+                }
+        }
+
+        private void checkWaitingProducts(){
+                Boolean productFound = false;
+                for(int i=0; i<Prev.getProducts().size(); i++){
+                        Product product = Prev.getProducts().poll();
+                        if( product!=null ){
+                                //System.out.println( queue.getProducts().size() + " products waiting in Q" + queue.getId() );
+                                this.currentProduct = product;
+                                this.setColor(currentProduct.getColor());
+                                productFound = true;
+                                break;
+                        }
+                }
+                if( !productFound ){
+                        this.setReadyState();
+                }
+        }
+
+        private void setBusyState(){
+                this.ready=false;
+                this.setColor(currentProduct.getColor());
+        }
+
+        public void consumeProduct(){
+                System.out.println(this.getColor() + " processed in " + thread.getName());
+                try{this.thread.sleep(this.max);}catch (Exception e){}
+        }
+
+        private void setReadyState(){
+                this.ready = true;
+                this.setColor("White");
+
+        }
+
+
+        private void passProductToQueue(){
+                this.Next.AddProduct(this.currentProduct);
+                currentProduct = null;
+        }
+
+
 }
