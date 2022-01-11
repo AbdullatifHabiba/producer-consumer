@@ -79,14 +79,14 @@ public class Producer {
         executorService.shutdown();
     }
 
-   public void start()//Originator originator, CareTaker careTaker, TreeNode root){
-   { int min = 2000;// 2 seconds
+  /*  public void start(Originator originator, CareTaker careTaker, TreeNode root){
+        int min = 2000;// 2 seconds
         int max = 15000;// 10 seconds
         ArrayList<Long> time = new ArrayList<Long>();
         for (int i=0; i<8;i++){
             time.add( (long)(Math.random() * (max - min + 1) + min ));
         }
-        Thread t1 =new Thread(); //new Thread(new myRun(originator,careTaker,time,root));
+        Thread t1 = new Thread(new myRun(originator,careTaker,time,root));
         t1.start();
 
         try {
@@ -96,7 +96,7 @@ public class Producer {
         }
 
     }
-/*
+
     public void replay(Originator originator, CareTaker careTaker,TreeNode root){
         ArrayList<Long> time2 = new ArrayList<Long>();
         for (int i=0; i<8;i++){

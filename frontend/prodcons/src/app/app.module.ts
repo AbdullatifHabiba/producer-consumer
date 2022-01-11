@@ -12,6 +12,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { SidebarComponent } from './Components/sidebar/sidebar.component';
 import { ShapesService } from './Services/shapes.service';
 import { ControllerService } from './Services/controller.service';
+import { WebSocketAPI } from './websocket.service';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { ControllerService } from './Services/controller.service';
     FormsModule,
     HttpClientModule
   ],
-  providers: [ShapesService, ControllerService],
+  providers: [ShapesService, ControllerService,WebSocketAPI],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

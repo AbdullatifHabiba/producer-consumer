@@ -57,10 +57,10 @@ export class SidebarComponent implements OnInit {
     this.shapeService.deleteSelectedShape();
   }
 
-  
+
 
   Startsimulate() {
-    //this.controller.load(this.pathfile);
+    this.controller.buildtree();
   }
 
   stop() {
@@ -71,15 +71,15 @@ export class SidebarComponent implements OnInit {
 
   getnum(){
     this.shapeService.Products=this.makeprods(this.num);
+    console.log(this.shapeService.Products)
 
   }
 
   makeprods(n:number){
    let prs:Array<Product>=[];
     for(let i=0;i<n;i++){
-      prs.push({id:i,color:('#'+Math.floor(Math.random()*16777215))})
+      prs.push({id:i,color:('#'+Math.floor(Math.random()*16557995)*i)})
     }
-  console.log(prs)
   return prs;
   }
 }

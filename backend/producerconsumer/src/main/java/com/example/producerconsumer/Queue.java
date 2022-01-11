@@ -1,12 +1,16 @@
 package com.example.producerconsumer;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Stack;
+import com.example.producerconsumer.process.Pmachine;
 
-public class Queue implements Observer {
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class Queue {
     int Id;
     int NumOfProducts;
     Stack<Product> Products;
@@ -83,8 +87,70 @@ public class Queue implements Observer {
         Prev.add(M);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
 
+    private BlockingQueue<Product> ProductsQueue =
+            new LinkedBlockingQueue< Product >();
+    private ExecutorService executorService =
+            Executors.newCachedThreadPool();
+    private List<Machine> Machines =
+            new LinkedList< Machine >();
+    private volatile boolean shutdownCalled = false;
+
+
+
+    public void addMachine(Machine machine){
+        Machines.add(machine);
     }
+
+
+    public synchronized boolean sendToMachine(Product product)
+    {try {
+        Thread.sleep(10);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+        if(!shutdownCalled)
+        {
+            try
+            {
+                ProductsQueue.put(product);
+
+                int index =-1;
+                for(int i = 0 ; i < Machines.size();i++){
+                    if(Machines.get(i).isAvailable()){
+                        Machines.get(i).setAvailable(false);
+                        index=i;
+
+                        break;
+                    }
+                }
+                if(index!=-1){
+                    //Machines.get(index).Available = false;
+                    Machines.get(index).setProducer(this);
+                    Machines.get(index).setProductsQueue(this.ProductsQueue);
+                    Machines.get(index).number=index;
+                    executorService.execute(Machines.get(index));}
+            }
+            catch(InterruptedException ie)
+            {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void finishConsumption()
+    {
+        for(Machine machine : Machines)
+        {
+            machine.cancelExecution();
+        }
+
+        executorService.shutdown();
+    }
+
 }

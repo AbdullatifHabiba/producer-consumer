@@ -30,7 +30,7 @@ export const tools = [
       "iconLibrary" : "fontawesome",
       "iconName" : "fa-th-large"
   },{
-  "toolName" : "ellipse",
+  "toolName" : "Fqueue",
   "iconLibrary" : "fontawesome",
   "iconName" : "fa-plus"
 },

@@ -1,10 +1,15 @@
 package com.example.producerconsumer;
 
+import com.example.producerconsumer.process.Producer;
+
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Stack;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-public class Machine implements Observer {
+public class Machine implements Runnable {
     private int Id;
     private boolean Available;
     private int min = 1000;
@@ -89,8 +94,75 @@ public class Machine implements Observer {
         this.Next = next;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
 
+    long intervalSimulation;
+    Queue producer;
+    Queue output ;
+    Stack<Product> stack;
+    boolean finalOutput = false;
+
+    int number ;
+    private BlockingQueue<Product > productsQueue;
+    private volatile boolean keepProcessing;
+    Machine(BlockingQueue<Product> products){
+        this.productsQueue=products;
+    }
+    Machine(long time){
+        this.intervalSimulation=time;
+        System.out.println(intervalSimulation);
+        //this.ending = ending;
+    }
+    public void setOutput(Queue producer){
+        this.output=producer;
+    }
+    public void setProductsQueue(BlockingQueue<Product> productsQueue) {
+        this.productsQueue = productsQueue;
+    }
+    public void setFinalOutput(Stack<Product> stack){
+        this.stack=stack;
+        finalOutput = true;
+    }
+
+
+
+    public synchronized void run() {
+        System.out.println("the machine"+number);
+        while (!productsQueue.isEmpty()) {
+            try {
+                //Available =false;
+                Product temp = productsQueue.poll(1, TimeUnit.SECONDS);
+                if (temp != null) {
+                    Thread.sleep(intervalSimulation);
+
+                    System.out.println(temp+"    "+producer.Id+" the machine" + number);
+                    System.out.println("- -- - -- - - - - -- -");
+                    if(output!=null){
+                        this.output.sendToMachine(temp);
+                    }
+                    if (finalOutput){
+                        this.stack.push(temp);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("error in run in Machine");
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+
+        }
+        notifyProducers();
+        //this.cancelExecution();
+
+    }
+    public synchronized void notifyProducers(){
+        this.Available =true;
+    }
+
+    public void setProducer(Queue producer){
+        this.producer=producer;
+    }
+    public void cancelExecution()
+    {
+        this.keepProcessing = false;
     }
 }

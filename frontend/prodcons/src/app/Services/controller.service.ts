@@ -1,3 +1,4 @@
+import { WebSocketAPI } from './../websocket.service';
 import { Link } from './../Components/canvas/Link';
 import { Injectable } from '@angular/core';
 import { MousePosition } from '../MousePosition';
@@ -9,8 +10,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 export class ControllerService {
   constructor(
     private shapeService: ShapesService,
-    private httpclient: HttpClient
-  ) {}
+    private httpclient: HttpClient,
+    private WebSocket:WebSocketAPI
+  ) {
+
+  }
 
   shapePoints: MousePosition[] = [];
   leftshift = 260;
@@ -86,12 +90,14 @@ export class ControllerService {
 
          }
 
-         }else if (this.currentTool.name == 'ellipse') {
+         }else if (this.currentTool.name == 'Fqueue') {
 
           this.shapeService.unSelectAll();
           this.shapeService.selectShape(shape);
           shape.isSelected = true;
           this.fqueue=shape;
+          this.WebSocket._connect();
+
           console.log(this.fqueue)
 
          }
@@ -127,81 +133,32 @@ return ch;
 
 
   results: any;
-  serverUrlsingle = 'http://localhost:8080/shape/';
-  undo() {
-    this.httpclient
-      .get(`${this.serverUrlsingle}/${'undo'}`, {
-        observe: 'response',
-      })
-      .subscribe(
-        (response) => {
-          this.results = response.body;
-          this.shapeService = JSON.parse(this.results);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-      );
-  }
+  serverUrlsingle = 'http://localhost:8080/action/';
+  tree:any={};
 
-  redo() {
+  file:any;
+  public formData = new FormData();
+
+
+  buildtree(){
+    this.tree["root"] = this.fqueue;
+    this.tree["products"] = this.shapeService.Products;
+    this.tree["links"] = this.shapeService.links;
+    this.tree["shapes"] = this.shapeService.shapes;
+    this.formData.append('Tree',JSON.stringify(this.tree));
+    this.WebSocket._send(this.tree);
+
 
   }
-  load(serverUrlsingle: string) {
-    this.httpclient
-      .get('${this.serverUrlsingle}/${load}', {
-        params: { path: serverUrlsingle },
-        observe: 'response',
-      })
-      .subscribe(
-        (response) => {
-          this.results = response.body;
-          this.shapeService = JSON.parse(this.results);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-      );
-  }
+recievetree(){
+   console.log("tree"+this.WebSocket.onMessageReceived);
 
-  save(serverUrlsingle: string) {
-    this.httpclient
-      .get('${this.serverUrlsingle}/${save}', {
-        params: { path: serverUrlsingle },
-        observe: 'response',
-      })
-      .subscribe(
-        (response) => {
-          this.results = response.body;
-          this.shapeService = JSON.parse(this.results);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-      );
-  }
 
-  cloneShape(id: number) {
-    this.httpclient
-      .get('${this.serverUrlsingle}/${copy}', {
-        params: { id: id },
-        observe: 'response',
-      })
-      .subscribe(
-        (response) => {
-          this.results = response.body;
-          this.shapeService = JSON.parse(this.results);
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-        }
-      );
-  }
+}
 
   createShapePrototype(point1: MousePosition, point2: MousePosition) {
     if (
       point1.x == point2.x &&
-      point2.x == point2.x &&
       point1.y == point1.y &&
       point2.y == point2.y
     ) {

@@ -11,7 +11,7 @@ export class ShapesService {
   private selectedShape: Shape | null = null;
   private prototypeShape : Shape | null = null;
 
-   Products:Array<Product>=[];
+   Products:Product[]=[];
 
 
   getSelectedShape() {

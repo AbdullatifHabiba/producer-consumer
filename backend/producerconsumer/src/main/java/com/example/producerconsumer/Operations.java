@@ -8,8 +8,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-public class Operations extends Observable {
+public class Operations implements Runnable {
     Originator originator = new Originator();
     CareTaker careTaker = new CareTaker();
 
@@ -89,7 +91,12 @@ public class Operations extends Observable {
         else return;
     }
 
-    void ProduceProduct(Product product, int MachineId) {
+    @Override
+    public void run() {
+
+    }
+
+    synchronized void ProduceProduct(Product product, int MachineId) {
         if (machines.get(GetMachine(MachineId)).isAvailable()) {
             machines.get(GetMachine(MachineId)).setColor(product.getColor());
             machines.get(GetMachine(MachineId)).setAvailable(false);
@@ -97,7 +104,8 @@ public class Operations extends Observable {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+                Thread.currentThread().interrupt();            }
+
             machines.get(GetMachine(MachineId)).setColor("");
             machines.get(GetMachine(MachineId)).setAvailable(true);
             Queue queue = machines.get(GetMachine(MachineId)).getNext();
@@ -106,11 +114,13 @@ public class Operations extends Observable {
         }
     }
 
-    void MoveProduct(int Id) {
+    synchronized void MoveProduct(int Id) {
         switch (Tree.get(GetNode(Id)).getType()) {
             case 'M':
                 Machine machine = machines.get(GetMachine(Id));
                 Stack<Product> products = machine.getPrev().getProducts();
+                 BlockingQueue<Product > productsQueue;
+
                 while (!products.isEmpty()) {
                     ProduceProduct(products.pop(), machine.getId());
                     products = machine.getPrev().getProducts();
