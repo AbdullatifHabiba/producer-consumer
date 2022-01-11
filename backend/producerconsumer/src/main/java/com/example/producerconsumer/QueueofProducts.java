@@ -6,7 +6,6 @@ import java.util.*;
 public class QueueofProducts implements Observer {
     int Id;
     private Queue<Product> Products;
-
     Point Position;
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
@@ -51,15 +50,15 @@ public class QueueofProducts implements Observer {
         return Next;
     }
 
-    void AddProduct(Product product){
+    void AddProduct(Product product) {
         Products.add(product);
     }
 
-    void AddNext(Machine M){
+    void AddNext(Machine M) {
         Next.add(M);
     }
 
-    void AddPrev(Machine M){
+    void AddPrev(Machine M) {
         Prev.add(M);
     }
 
@@ -67,6 +66,7 @@ public class QueueofProducts implements Observer {
     public void update(Observable o, Object arg) {
 
     }
+
     public synchronized void addProductToQueue(Product product) {
         this.Products.add(product);
         /*if( Id == 0 ){
@@ -79,27 +79,22 @@ public class QueueofProducts implements Observer {
                 e.printStackTrace();
             }
         }*/
-
         System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
-        if( this.Next.size() != 0 ){
+        if (this.Next.size() != 0) {
             Machine machine = this.Next.get(0);
-            System.out.println("M" + machine.getId() +" on peak " + machine.ready);
-            if( machine.ready ){
+            System.out.println("M" + machine.getId() + " on peak " + machine.ready);
+            if (machine.ready) {
                 produceProduct(machine);
                 System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
             }
         }
     }
 
-
-
-    public void produceProduct(Machine machine){
-        machine.addProductToMachine(this.Products.remove(),this);
+    public void produceProduct(Machine machine) {
+        machine.addProductToMachine(this.Products.remove(), this);
     }
 
-    public int getProductsNumber(){
+    public int getProductsNumber() {
         return Products.size();
     }
-
-
 }

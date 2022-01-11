@@ -31,12 +31,6 @@ public class Controllertree {
             System.out.println(tree);
             return "done";
         }
-       /* JSONObject jsonObject = (JSONObject) parser.parse(tree);
-        System.out.println(jsonObject);*/
-        /*System.out.println("shapes"+jsonObject.get("shapes"));
-        System.out.println("links"+jsonObject.get("links"));
-        System.out.println("root"+jsonObject.get("root"));
-        System.out.println("products"+jsonObject.get("products"));*/
         JSONArray edittree = new JSONArray();
         return tree;
     }

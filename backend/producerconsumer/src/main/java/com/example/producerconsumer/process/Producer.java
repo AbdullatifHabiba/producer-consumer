@@ -1,7 +1,6 @@
 package com.example.producerconsumer.process;
 
 import com.example.producerconsumer.Product;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -75,23 +74,16 @@ public class Producer {
         executorService.shutdown();
     }
 
-
-  /*  public void start(Originator originator, CareTaker careTaker, TreeNode root){
-=======
-    public void start()//Originator originator, CareTaker careTaker, TreeNode root){
+    /*public void start()//Originator originator, CareTaker careTaker, TreeNode root){
     {
->>>>>>> fcedb4fb934a4afc35779ed2642c2c57d5d30148
         int min = 2000;// 2 seconds
         int max = 15000;// 10 seconds
         ArrayList<Long> time = new ArrayList<Long>();
         for (int i = 0; i < 8; i++) {
             time.add((long) (Math.random() * (max - min + 1) + min));
         }
-<<<<<<< HEAD
         Thread t1 = new Thread(new myRun(originator,careTaker,time,root));
-=======
         Thread t1 = new Thread(); //new Thread(new myRun(originator,careTaker,time,root));
->>>>>>> fcedb4fb934a4afc35779ed2642c2c57d5d30148
         t1.start();
         try {
             t1.join();
@@ -117,7 +109,6 @@ public class Producer {
         }
     }
 
-
     public static void main(String [] args){
         Originator originator = new Originator();
         CareTaker careTaker = new CareTaker();
@@ -126,7 +117,5 @@ public class Producer {
         System.out.println("25iraaaaaan");
         //new Producer().replay(originator,careTaker,root);
         //System.out.println("elhamdullah");
-    }
-*/
-
+    }*/
 }

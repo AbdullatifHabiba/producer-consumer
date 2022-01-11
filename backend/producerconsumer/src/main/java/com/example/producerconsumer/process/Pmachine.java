@@ -15,11 +15,8 @@ public class Pmachine implements Runnable {
     Producer output;
     Stack<Product> stack;
     boolean finalOutput = false;
-
-
     int number ;
     private BlockingQueue<Product > productsQueue;
-
     //Stack<Integer> ending = new Stack<Integer>();
 
     private volatile boolean keepProcessing;

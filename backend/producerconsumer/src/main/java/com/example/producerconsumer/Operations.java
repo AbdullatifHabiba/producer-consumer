@@ -2,14 +2,12 @@ package com.example.producerconsumer;
 
 import com.example.producerconsumer.SnapShot.CareTaker;
 import com.example.producerconsumer.SnapShot.Originator;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 
 public class Operations extends Observable {
     Originator originator = new Originator();
@@ -29,9 +27,9 @@ public class Operations extends Observable {
         this.products = products;
     }
 
-    void AddNode(int Id, char Type, Point Position){
+    void AddNode(int Id, char Type, Point Position) {
         Tree.add(new TreeNode(Id, Type));
-        switch (Type){
+        switch (Type) {
             case 'Q':
                 queues.add(new QueueofProducts(Id, Position));
                 break;
@@ -51,31 +49,31 @@ public class Operations extends Observable {
         HeadNode = headNode;
     }
 
-    int GetNode(int Id){
-        for (int i = 0;i < Tree.size();i++){
+    int GetNode(int Id) {
+        for (int i = 0; i < Tree.size(); i++) {
             if (Tree.get(i).getId() == Id)
                 return i;
         }
         return -1;
     }
 
-    int GetQueue(int Id){
-        for (int i = 0;i < queues.size();i++){
+    int GetQueue(int Id) {
+        for (int i = 0; i < queues.size(); i++) {
             if (queues.get(i).getId() == Id)
                 return i;
         }
         return -1;
     }
 
-    int GetMachine(int Id){
-        for (int i = 0;i < machines.size();i++){
+    int GetMachine(int Id) {
+        for (int i = 0; i < machines.size(); i++) {
             if (machines.get(i).getId() == Id)
                 return i;
         }
         return -1;
     }
 
-    void Connect(int Id1, int Id2){
+    void Connect(int Id1, int Id2) {
         int node1 = GetNode(Id1);
         int node2 = GetNode(Id2);
         TreeNode Node1 = Tree.get(node1);
@@ -84,22 +82,18 @@ public class Operations extends Observable {
         Node2.AddParent(Node1);
         Tree.set(node1, Node1);
         Tree.set(node2, Node2);
-        if (Node1.getType() == 'Q'){
+        if (Node1.getType() == 'Q') {
             QueueofProducts Q = queues.get(GetQueue(Node1.Id));
             Machine M = machines.get(GetMachine(Node2.Id));
             M.setPrev(Q);
             Q.AddNext(M);
-        }
-        else if (Node1.getType() == 'M'){
+        } else if (Node1.getType() == 'M') {
             QueueofProducts Q = queues.get(GetQueue(Node2.Id));
             Machine M = machines.get(GetMachine(Node1.Id));
             M.setNext(Q);
             Q.AddPrev(M);
-        }
-        else return;
+        } else return;
     }
-
-
 
     synchronized void ProduceProduct(Product product, int MachineId) {
         if (machines.get(GetMachine(MachineId)).isAvailable()) {
@@ -109,17 +103,15 @@ public class Operations extends Observable {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-
-                Thread.currentThread().interrupt();            }
-
+                Thread.currentThread().interrupt();
             }
-            SaveMomento();
-            machines.get(GetMachine(MachineId)).setColor("white");
-            machines.get(GetMachine(MachineId)).setAvailable(true);
-            QueueofProducts queue = machines.get(GetMachine(MachineId)).getNext();
-            queue.AddProduct(product);
-            queues.set(GetQueue(queue.getId()), queue);
-
+        }
+        SaveMomento();
+        machines.get(GetMachine(MachineId)).setColor("white");
+        machines.get(GetMachine(MachineId)).setAvailable(true);
+        QueueofProducts queue = machines.get(GetMachine(MachineId)).getNext();
+        queue.AddProduct(product);
+        queues.set(GetQueue(queue.getId()), queue);
         SaveMomento();
     }
 
@@ -128,18 +120,16 @@ public class Operations extends Observable {
             case 'M':
                 Machine machine = machines.get(GetMachine(Id));
                 Queue<Product> products = machine.getPrev().getProducts();
-                 BlockingQueue<Product > productsQueue;
-
+                BlockingQueue<Product> productsQueue;
                 while (!products.isEmpty()) {
-                    Product P=products.poll();
-
-                    System.out.println("P"+P.Id+" m"+machine.getId());
+                    Product P = products.poll();
+                    System.out.println("P" + P.Id + " m" + machine.getId());
                     ProduceProduct(products.poll(), machine.getId());
                     products = machine.getPrev().getProducts();
                 }
                 break;
             case 'Q':
-                for (int i = 0;i < queues.get(GetQueue(Id)).getNext().size();i++){
+                for (int i = 0; i < queues.get(GetQueue(Id)).getNext().size(); i++) {
                     MoveProduct(queues.get(GetQueue(Id)).getNext().get(i).getId());
                     try {
                         Thread.sleep(100);
@@ -154,24 +144,25 @@ public class Operations extends Observable {
         SaveMomento();
     }
 
-    int GetProduct(String Color){
-        for (int i = 0;i < products.size();i++){
+    int GetProduct(String Color) {
+        for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getColor().equalsIgnoreCase(Color))
                 return i;
         }
         return -1;
     }
-    void SaveMomento(){
+
+    void SaveMomento() {
         int[] positions = new int[products.size()];
-        for (int i = 0;i < Tree.size();i++){
-            switch (Tree.get(i).getType()){
+        for (int i = 0; i < Tree.size(); i++) {
+            switch (Tree.get(i).getType()) {
                 case 'M':
                     if (!machines.get(GetMachine(Tree.get(i).getId())).isAvailable())
                         positions[GetProduct(machines.get(GetMachine(Tree.get(i).getId())).getColor())] = Tree.get(i).getId();
                     break;
                 case 'Q':
-                    if (!queues.get(GetQueue(Tree.get(i).getId())).getProducts().isEmpty()){
-                        for (int k = 0;k < queues.get(GetQueue(Tree.get(i).getId())).getProducts().size();k++){
+                    if (!queues.get(GetQueue(Tree.get(i).getId())).getProducts().isEmpty()) {
+                        for (int k = 0; k < queues.get(GetQueue(Tree.get(i).getId())).getProducts().size(); k++) {
                             positions[GetProduct(queues.get(GetQueue(Tree.get(i).getId())).getProducts().poll().getColor())] = Tree.get(i).getId();
                         }
                     }
@@ -181,7 +172,7 @@ public class Operations extends Observable {
             }
         }
         String state = "" + positions[0];
-        for (int i = 0;i < positions.length - 1;i ++)
+        for (int i = 0; i < positions.length - 1; i++)
             state = state + "," + positions[i + 1];
         System.out.println(state);
         originator.setState(state);

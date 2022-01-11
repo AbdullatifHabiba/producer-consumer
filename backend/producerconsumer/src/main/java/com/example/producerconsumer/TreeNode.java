@@ -41,11 +41,11 @@ public class TreeNode implements Observer {
         return Type;
     }
 
-    public void AddSon(TreeNode Node){
+    public void AddSon(TreeNode Node) {
         Sons.add(Node);
     }
 
-    public void AddParent(TreeNode Node){
+    public void AddParent(TreeNode Node) {
         Parents.add(Node);
     }
 

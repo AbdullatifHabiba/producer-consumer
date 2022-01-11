@@ -12,10 +12,10 @@ public class MachinetoJSON {
         this.machines = machines;
     }
 
-    JSONArray GetJSON(){
+    JSONArray GetJSON() {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
-        for (int i = 0;i < machines.size();i++){
+        for (int i = 0; i < machines.size(); i++) {
             jsonObject.put("id", machines.get(i).getId());
             jsonObject.put("color", machines.get(i).getColor());
             jsonObject.put("next", machines.get(i).getNext().getId());

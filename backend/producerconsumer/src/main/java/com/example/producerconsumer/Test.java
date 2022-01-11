@@ -26,13 +26,13 @@ public class Test {
         O.setProducts(productArrayList);
         Point P1 = new Point(1, 2);
         O.AddNode(1, 'Q', P1);
-        P1 = new Point(3,2);
+        P1 = new Point(3, 2);
         O.AddNode(4, 'M', P1);
         O.Connect(1, 4);
-        P1 = new Point(3,6);
+        P1 = new Point(3, 6);
         O.AddNode(3, 'Q', P1);
         O.Connect(4, 3);
-        P1 = new Point(2,7);
+        P1 = new Point(2, 7);
         O.AddNode(2, 'M', P1);
         O.Connect(2, 3);
         O.Connect(1, 2);
@@ -41,12 +41,11 @@ public class Test {
         System.out.println(O.queues.get(0).getNext().get(0).getId());
         System.out.println(O.Tree.get(1).getParents().get(0).getType());
         //O.MoveProduct(1);
-        Running N=new Running();
-        N.machines=O.machines;
-        N.queues=O.queues;
-        N.products=O.products;
-
-        Thread th=new Thread(N,"running");
+        Running N = new Running();
+        N.machines = O.machines;
+        N.queues = O.queues;
+        N.products = O.products;
+        Thread th = new Thread(N, "running");
         th.start();
         System.out.println(th);
     }
