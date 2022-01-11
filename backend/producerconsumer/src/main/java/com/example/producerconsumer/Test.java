@@ -1,13 +1,8 @@
 package com.example.producerconsumer;
 
-import com.example.producerconsumer.process.Pmachine;
-import com.example.producerconsumer.process.Producer;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Test {
     public static void main(String[] args) {
