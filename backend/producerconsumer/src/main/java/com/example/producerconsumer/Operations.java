@@ -1,15 +1,13 @@
 package com.example.producerconsumer;
 
 import com.example.producerconsumer.SnapShot.CareTaker;
-import com.example.producerconsumer.SnapShot.Momento;
 import com.example.producerconsumer.SnapShot.Originator;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
 
-public class Operations extends Observable {
+public class Operations/* extends Observable */{
     Originator originator = new Originator();
     CareTaker careTaker = new CareTaker();
 
@@ -18,6 +16,14 @@ public class Operations extends Observable {
     ArrayList<TreeNode> Tree = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
     int HeadNode;
+
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
 
     void AddNode(int Id, char Type, Point Position){
         Tree.add(new TreeNode(Id, Type));
@@ -79,12 +85,16 @@ public class Operations extends Observable {
             Machine M = machines.get(GetMachine(Node2.Id));
             M.setPrev(Q);
             Q.AddNext(M);
+            //queues.set(GetQueue(Node2.Id), Q);
+            //machines.set(GetMachine(Node1.Id), M);
         }
         else if (Node1.getType() == 'M'){
             Queue Q = queues.get(GetQueue(Node2.Id));
             Machine M = machines.get(GetMachine(Node1.Id));
             M.setNext(Q);
             Q.AddPrev(M);
+            //queues.set(GetQueue(Node2.Id), Q);
+            //machines.set(GetMachine(Node1.Id), M);
         }
         else return;
     }
@@ -98,12 +108,14 @@ public class Operations extends Observable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            SaveMomento();
             machines.get(GetMachine(MachineId)).setColor("");
             machines.get(GetMachine(MachineId)).setAvailable(true);
             Queue queue = machines.get(GetMachine(MachineId)).getNext();
             queue.AddProduct(product);
             queues.set(GetQueue(queue.getId()), queue);
         }
+        SaveMomento();
     }
 
     void MoveProduct(int Id) {
@@ -124,6 +136,7 @@ public class Operations extends Observable {
             default:
                 break;
         }
+        SaveMomento();
     }
 
     int GetProduct(String Color){
@@ -155,6 +168,7 @@ public class Operations extends Observable {
         String state = "" + positions[0];
         for (int i = 0;i < positions.length - 1;i ++)
             state = state + "," + positions[i + 1];
+        System.out.println(state);
         originator.setState(state);
         careTaker.add(originator.saveStateToMomento());
     }

@@ -22,6 +22,14 @@ public class Producer {
     public Producer() {
     }
 
+    public BlockingQueue<Product> getProductsQueue() {
+        return ProductsQueue;
+    }
+
+    public void setProductsQueue(BlockingQueue<Product> productsQueue) {
+        ProductsQueue = productsQueue;
+    }
+
     public void addMachine(Pmachine machine) {
         Machines.add(machine);
     }
