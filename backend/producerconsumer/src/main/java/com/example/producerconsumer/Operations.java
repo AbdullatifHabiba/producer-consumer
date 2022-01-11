@@ -114,7 +114,7 @@ public class Operations/* extends Observable */{
         SaveMomento();
     }
 
-    void MoveProduct(int Id) {
+    synchronized void MoveProduct(int Id) {
         switch (Tree.get(GetNode(Id)).getType()) {
             case 'M':
                 Machine machine = machines.get(GetMachine(Id));
