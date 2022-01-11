@@ -1,7 +1,6 @@
 package com.example.producerconsumer.process;
 
 import com.example.producerconsumer.Product;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,88 +12,76 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Producer {
     String name;
     private BlockingQueue<Product> ProductsQueue =
-            new LinkedBlockingQueue< Product >();
+            new LinkedBlockingQueue<Product>();
     private ExecutorService executorService =
             Executors.newCachedThreadPool();
-    private List< Pmachine > Machines =
-            new LinkedList< Pmachine >();
+    private List<Pmachine> Machines =
+            new LinkedList<Pmachine>();
     private volatile boolean shutdownCalled = false;
 
-    public Producer(){
-
+    public Producer() {
     }
 
-    public void addMachine(Pmachine machine){
+    public void addMachine(Pmachine machine) {
         Machines.add(machine);
     }
 
-
-    public synchronized boolean sendToMachine(Product product)
-    {try {
-        Thread.sleep(10);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
-        if(!shutdownCalled)
-        {
-            try
-            {
+    public synchronized boolean sendToMachine(Product product) {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!shutdownCalled) {
+            try {
                 ProductsQueue.put(product);
-
-                int index =-1;
-                for(int i = 0 ; i < Machines.size();i++){
-                    if(Machines.get(i).Available){
-                        Machines.get(i).Available=false;
-                        index=i;
-
+                int index = -1;
+                for (int i = 0; i < Machines.size(); i++) {
+                    if (Machines.get(i).Available) {
+                        Machines.get(i).Available = false;
+                        index = i;
                         break;
                     }
                 }
-                if(index!=-1){
+                if (index != -1) {
                     //Machines.get(index).Available = false;
                     Machines.get(index).setProducer(this);
                     Machines.get(index).setProductsQueue(this.ProductsQueue);
-                    Machines.get(index).number=index;
-                    executorService.execute(Machines.get(index));}
-            }
-            catch(InterruptedException ie)
-            {
+                    Machines.get(index).number = index;
+                    executorService.execute(Machines.get(index));
+                }
+            } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
                 return false;
             }
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-    public void finishConsumption()
-    {
-        for(Pmachine machine : Machines)
-        {
+
+    public void finishConsumption() {
+        for (Pmachine machine : Machines) {
             machine.cancelExecution();
         }
-
         executorService.shutdown();
     }
 
-   public void start()//Originator originator, CareTaker careTaker, TreeNode root){
-   { int min = 2000;// 2 seconds
+    public void start()//Originator originator, CareTaker careTaker, TreeNode root){
+    {
+        int min = 2000;// 2 seconds
         int max = 15000;// 10 seconds
         ArrayList<Long> time = new ArrayList<Long>();
-        for (int i=0; i<8;i++){
-            time.add( (long)(Math.random() * (max - min + 1) + min ));
+        for (int i = 0; i < 8; i++) {
+            time.add((long) (Math.random() * (max - min + 1) + min));
         }
-        Thread t1 =new Thread(); //new Thread(new myRun(originator,careTaker,time,root));
+        Thread t1 = new Thread(); //new Thread(new myRun(originator,careTaker,time,root));
         t1.start();
-
         try {
             t1.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 /*
     public void replay(Originator originator, CareTaker careTaker,TreeNode root){

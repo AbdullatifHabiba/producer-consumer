@@ -1,10 +1,9 @@
 package com.example.producerconsumer;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Stack;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Queue implements Observer {
     int Id;
@@ -18,7 +17,7 @@ public class Queue implements Observer {
         Id = id;
         Position = position;
         NumOfProducts = 0;
-        Products = new Stack<>();
+        Products = new Stack<Product>();
         Prev = new ArrayList<>();
         Next = new ArrayList<>();
     }
