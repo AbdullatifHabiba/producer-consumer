@@ -5,7 +5,8 @@ import java.util.*;
 
 public class QueueofProducts implements Observer {
     int Id;
-    Stack<Product> Products;
+    private Queue<Product> Products;
+
     Point Position;
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
@@ -13,7 +14,7 @@ public class QueueofProducts implements Observer {
     public QueueofProducts(int id, Point position) {
         Id = id;
         Position = position;
-        Products = new Stack<>();
+        Products = new LinkedList<Product>();
         Prev = new ArrayList<>();
         Next = new ArrayList<>();
     }
@@ -26,11 +27,11 @@ public class QueueofProducts implements Observer {
         Id = id;
     }
 
-    public Stack<Product> getProducts() {
+    public Queue<Product> getProducts() {
         return Products;
     }
 
-    public void setProducts(Stack<Product> products) {
+    public void setProducts(Queue<Product> products) {
         Products = products;
     }
 
@@ -66,4 +67,39 @@ public class QueueofProducts implements Observer {
     public void update(Observable o, Object arg) {
 
     }
+    public synchronized void addProductToQueue(Product product) {
+        this.Products.add(product);
+        /*if( Id == 0 ){
+            QueueShape newShape = queueShape.clone();
+            newShape.setProductsInQ(getProductsNumber());
+            notifyUI( newShape );
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }*/
+
+        System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
+        if( this.Next.size() != 0 ){
+            Machine machine = this.Next.get(0);
+            System.out.println("M" + machine.getId() +" on peak " + machine.ready);
+            if( machine.ready ){
+                produceProduct(machine);
+                System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
+            }
+        }
+    }
+
+
+
+    public void produceProduct(Machine machine){
+        machine.addProductToMachine(this.Products.remove(),this);
+    }
+
+    public int getProductsNumber(){
+        return Products.size();
+    }
+
+
 }

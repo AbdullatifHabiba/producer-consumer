@@ -5,6 +5,8 @@ import com.example.producerconsumer.process.Producer;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,7 +18,7 @@ public class Test {
         Product product2 = new Product(1, "gray");
         Product product3 = new Product(2, "black");
         Product product4 = new Product(3, "blue");
-        Stack<Product> products = new Stack<>();
+        Queue<Product> products = new LinkedList<>();
         products.add(product1);
         products.add(product2);
         products.add(product3);
@@ -43,6 +45,14 @@ public class Test {
         System.out.println(O.machines.get(0).getPrev().getId());
         System.out.println(O.queues.get(0).getNext().get(0).getId());
         System.out.println(O.Tree.get(1).getParents().get(0).getType());
-        O.MoveProduct(1);
+        //O.MoveProduct(1);
+        Running N=new Running();
+        N.machines=O.machines;
+        N.queues=O.queues;
+        N.products=O.products;
+
+        Thread th=new Thread(N,"running");
+        th.start();
+        System.out.println(th);
     }
 }
