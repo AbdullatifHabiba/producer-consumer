@@ -1,14 +1,19 @@
 package com.example.producerconsumer;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 import java.awt.*;
 import java.util.*;
 
-public class QueueofProducts {
+
+public class QueueofProducts implements Iproducer {
     int Id;
     Point Position;
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
     private Queue<Product> Products;
+    private final SimpMessagingTemplate messagingTemplate = null;
+    Controllertree controllertree = new Controllertree(messagingTemplate);
 
     public QueueofProducts(int id, Point position) {
         Id = id;
@@ -67,12 +72,12 @@ public class QueueofProducts {
         if (machine.ready) {
             this.Next.add(0, machine);
         } else {
-            this.Next.add(this.Next.size() - 1, machine);
+            this.Next.add(machine);
         }
     }
 
     public synchronized void addProductToQueue(Product product) {
-        //this.Products.add(product);
+
         int index = -1;
         for (int i = 0; i < this.Next.size(); i++) {
             if (this.Next.get(i).ready) {
@@ -81,8 +86,8 @@ public class QueueofProducts {
                 break;
             }
         }
-        System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
         if (index != -1) {
+
             Machine machine = this.Next.get(index);
             System.out.println("M" + machine.getId() + " on peak " + !machine.ready);
             produceProduct(machine);
@@ -101,6 +106,7 @@ public class QueueofProducts {
     public void produceProduct(Machine machine) {
         System.out.println("pr in q " + this.Products.size());
         machine.addProductToMachine(this.Products.remove(), this);
+        controllertree.notifyFrontend(machine, this);
     }
 
     public int getProductsNumber() {

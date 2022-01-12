@@ -45,13 +45,13 @@ public class Test {
         O.AddNode(2, 'M', P1);
         O.Connect(2, 3);
         O.Connect(1, 2);
-        O.queues.get(O.GetQueue(1)).setProducts(products);
-        System.out.println(O.machines.get(0).getPrev().getId());
-        System.out.println(O.queues.get(0).getNext().get(0).getId());
+        Operations.queues.get(O.GetQueue(1)).setProducts(products);
+        System.out.println(Operations.machines.get(0).getPrev().getId());
+        System.out.println(Operations.queues.get(0).getNext().get(0).getId());
         System.out.println(O.Tree.get(1).getParents().get(0).getType());
         Running N = new Running();
-        N.machines = O.machines;
-        N.queues = O.queues;
+        N.machines = Operations.machines;
+        N.queues = Operations.queues;
         N.products = O.products;
         Thread th = new Thread(N, "running");
         th.start();

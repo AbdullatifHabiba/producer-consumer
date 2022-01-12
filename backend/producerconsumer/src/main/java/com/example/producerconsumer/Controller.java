@@ -42,7 +42,7 @@ public class Controller {
     void addProducts(@RequestParam String products) throws ParseException {
         ArrayList<Product> productArrayList = new ArrayList<>();
         JSONArray jsonArray = (JSONArray) jsonParser.parse(products);
-        for (int i = 0;i < jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             Product product = new Product(Integer.parseInt(jsonObject.get("id").toString()), jsonObject.get("color").toString());
             productArrayList.add(product);

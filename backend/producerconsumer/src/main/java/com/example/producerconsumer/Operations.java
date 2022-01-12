@@ -2,6 +2,8 @@ package com.example.producerconsumer;
 
 import com.example.producerconsumer.SnapShot.CareTaker;
 import com.example.producerconsumer.SnapShot.Originator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,19 +12,16 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 
 public class Operations extends Observable {
+    static ArrayList<QueueofProducts> queues = new ArrayList<>();
+    static ArrayList<Machine> machines = new ArrayList<>();
     Originator originator = new Originator();
     CareTaker careTaker = new CareTaker();
-
-    ArrayList<QueueofProducts> queues = new ArrayList<>();
-    ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
     int HeadNode;
-
     public ArrayList<Product> getProducts() {
         return products;
     }
-
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
@@ -93,6 +92,38 @@ public class Operations extends Observable {
             M.setNext(Q);
             Q.AddPrev(M);
         } else return;
+    }
+
+    public JSONArray GetJSON(ArrayList<Machine> machines, ArrayList<QueueofProducts> queues) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < queues.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", queues.get(i).getId());
+            jsonObject.put("isselected", false);
+            jsonObject.put("shapetype", "rectangle");
+            jsonObject.put("width", 120);
+            jsonObject.put("height", 60);
+            jsonObject.put("color", "white");
+            JSONObject JO = new JSONObject();
+            JO.put("x", queues.get(i).getPosition().getX());
+            JO.put("y", queues.get(i).getPosition().getY());
+            jsonObject.put("position", JO);
+            jsonArray.add(jsonObject);
+        }
+        for (int i = 0; i < machines.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", machines.get(i).getId());
+            jsonObject.put("isselected", false);
+            jsonObject.put("shapetype", "circle");
+            jsonObject.put("radius", 50);
+            jsonObject.put("color", machines.get(i).getColor());
+            JSONObject JO = new JSONObject();
+            JO.put("x", machines.get(i).getPosition().getX());
+            JO.put("y", machines.get(i).getPosition().getY());
+            jsonObject.put("position", JO);
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
     }
 
     synchronized void ProduceProduct(Product product, int MachineId) {

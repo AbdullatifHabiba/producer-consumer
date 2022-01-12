@@ -1,12 +1,14 @@
 package com.example.producerconsumer;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 import java.awt.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Machine implements Runnable {
+public class Machine implements Runnable, Iconsumer {
+
+    boolean ready = true;
     private int Id;
     private boolean Available;
     private int min = 1000;
@@ -15,12 +17,13 @@ public class Machine implements Runnable {
     private String Color;
     private QueueofProducts Prev;
     private QueueofProducts Next;
-    private Thread thread;
+    private final Thread thread;
     private volatile boolean run = true;
     private volatile Product currentProduct;
-    boolean ready = true;
-    private ExecutorService executorService =
+    private final ExecutorService executorService =
             Executors.newCachedThreadPool();
+    private final SimpMessagingTemplate messagingTemplate = null;
+    Controllertree controllertree = new Controllertree(messagingTemplate);
 
     public Machine(int id, Point position) {
         this.Id = id;
@@ -98,21 +101,22 @@ public class Machine implements Runnable {
         this.Next = next;
     }
 
-
+    @Override
     public synchronized void addProductToMachine(Product currentProduct, QueueofProducts queue) {
         this.currentProduct = currentProduct;
         this.setBusyState();
-        // this.Prev=queue;
         notify();
     }
 
     public void start() {
         try {
-            Thread.currentThread().sleep(1000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         this.thread.start();
+        controllertree.notifyFrontend(this, this.getPrev());
+
         System.out.println(thread.getName() + " started");
         System.out.println("machine time : " + this.max);
     }
@@ -136,14 +140,15 @@ public class Machine implements Runnable {
                 System.out.println(this.getColor() + " : " + thread.getName());
             }
         }
+
     }
 
     public synchronized void shut() {
         synchronized (this.thread) {
             this.run = false;
+            controllertree.notifyFrontend(this, this.getPrev());
             System.out.println(this.thread.getName() + " is terminated");
             this.thread.interrupt();
-            //this.thread.notify();
         }
     }
 
@@ -171,9 +176,10 @@ public class Machine implements Runnable {
     }
 
     public void consumeProduct() {
+        controllertree.notifyFrontend(this, this.getPrev());
         System.out.println(this.getColor() + " processed in " + thread.getName());
         try {
-            this.thread.sleep(this.max);
+            Thread.sleep(this.max);
         } catch (Exception e) {
         }
     }
@@ -184,10 +190,10 @@ public class Machine implements Runnable {
         this.notifyInputQueues();
     }
 
+
     private void passProductToQueue() {
         this.Next.AddProduct(this.currentProduct);
         executorService.execute(this.Next.getNext().get(0));
-        // addProductToMachine(this.currentProduct , this.Next );
         System.out.println("Q" + this.Next.getId());
         System.out.println(this.Next.getProducts());
         currentProduct = null;
