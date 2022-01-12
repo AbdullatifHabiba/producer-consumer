@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Running implements Runnable{
     boolean start;
@@ -24,6 +26,8 @@ public class Running implements Runnable{
     ArrayList<Machine> machines = new ArrayList<>();
     ArrayList<TreeNode> Tree = new ArrayList<>();
     ArrayList<Product> products = new ArrayList<>();
+    private ExecutorService executorService =
+            Executors.newCachedThreadPool();
     int HeadNode;
 
     int GetNode(int Id){
@@ -135,7 +139,8 @@ public class Running implements Runnable{
         careTaker.add(originator.saveStateToMomento());
     }
     private void runAssemblyLine(){
-
+        ArrayList<QueueofProducts> queues = this.queues;
+        ArrayList<Machine> machines =this.machines;
         int[] time;
         if(replay){
             time = new int[]{1, 2};
@@ -149,17 +154,21 @@ public class Running implements Runnable{
                 time[i] = machines.get(i).getMax();
             }
             System.out.println(machines.get(i).getId()+"MM"+machines.get(i).getPrev().getProducts().peek());
-            machines.get(i).start();
+
+                System.out.println(machines.get(i).getId() +",s:"+machines.get(i).ready);
+                if (machines.get(i).ready&&machines.get(i).getPrev().getProductsNumber()>0)
+                {machines.get(i).start();}
+
         }
         originator.setState(time.toString());
     }
 
 
     // a function to input the products inside the input queue (and display them in the list) at the specified input rate
-    private void inputProductsToQueue() {
+    private void inputProductsToQueue(int ind) {
 
 
-        QueueofProducts inputQueue = queues.get(0);
+        QueueofProducts inputQueue = queues.get(ind);
 
         Runnable inputProductsRun = () -> {
             for( int i = 0 ; i < products.size() ; i++ ) {
@@ -179,10 +188,13 @@ public class Running implements Runnable{
 
     }
 
-    private void waitSimulation(){
+    private synchronized void waitSimulation(){
         Runnable waitSimulationRun = () -> {
-            while (queues.get(queues.size()-1).getProducts().size() < products.size()){
-                try {
+
+
+            while (queues.get(queues.size()-2).getProducts().size() < products.size()){
+              this.run();
+                             try {
                     Thread.currentThread().sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -202,13 +214,15 @@ public class Running implements Runnable{
             machines.get(i).shut();
         }
     }
+    int i=0;
     @Override
-    public void run() {
+    public synchronized void run() {
         System.out.println("START");
         this.runAssemblyLine();
         //originator.setState(savedState);
        // careTaker.add(originator.saveStateToMemento());
-        this. inputProductsToQueue();
+        this. inputProductsToQueue(i);
+        
         this. waitSimulation();
     }
 

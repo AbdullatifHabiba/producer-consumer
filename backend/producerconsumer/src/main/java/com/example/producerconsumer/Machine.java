@@ -103,6 +103,7 @@ public void setNext(QueueofProducts next) {
         public synchronized void addProductToMachine(Product currentProduct , QueueofProducts queue ) {
                 this.currentProduct = currentProduct;
                 this.setBusyState();
+               // this.Prev=queue;
                 notify();
         }
 
@@ -184,6 +185,10 @@ public void setNext(QueueofProducts next) {
 
         private void passProductToQueue(){
                 this.Next.AddProduct(this.currentProduct);
+                executorService.execute(this.Next.getNext().get(0));
+               // addProductToMachine(this.currentProduct , this.Next );
+                System.out.println("Q"+this.Next.getId());
+
                 System.out.println(this.Next.getProducts());
                 currentProduct = null;
         }

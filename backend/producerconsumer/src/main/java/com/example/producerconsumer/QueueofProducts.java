@@ -72,30 +72,26 @@ public class QueueofProducts  {
         }
     }
     public synchronized void addProductToQueue(Product product) {
-        this.Products.add(product);
-        /*if( Id == 0 ){
-            QueueShape newShape = queueShape.clone();
-            newShape.setProductsInQ(getProductsNumber());
-            notifyUI( newShape );
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        //this.Products.add(product);
+        int index = -1;
+        for (int i = 0; i < this.Next.size(); i++) {
+            if (this.Next.get(i).ready) {
+                this.Next.get(i).ready = false;
+                index = i;
+                break;
             }
-        }*/
-
-
+        }
         System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
-        if( this.Next.size() != 0 ){
-            Machine machine = this.Next.get(0);
 
-            System.out.println("M" + machine.getId() +" on peak " + machine.ready);
-            if( machine.ready ){
-                produceProduct(machine);
-                System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
-            }else {
-                //this.updateMachines();
-            }
+        if (index != -1) {
+
+            Machine machine = this.Next.get(index);
+            System.out.println("M" + machine.getId() +" on peak " + !machine.ready);
+            produceProduct(machine);
+            System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
+
+
         }
     }
 
@@ -108,6 +104,7 @@ public class QueueofProducts  {
     }
 
     public void produceProduct(Machine machine){
+        System.out.println("pr in q "+this.Products.size());
         machine.addProductToMachine(this.Products.remove(),this);
     }
 
