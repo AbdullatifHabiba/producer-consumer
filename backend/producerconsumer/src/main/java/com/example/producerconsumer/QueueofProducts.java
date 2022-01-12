@@ -3,9 +3,10 @@ package com.example.producerconsumer;
 import java.awt.*;
 import java.util.*;
 
-public class QueueofProducts implements Observer {
+public class QueueofProducts  {
     int Id;
     private Queue<Product> Products;
+
     Point Position;
     ArrayList<Machine> Prev;
     ArrayList<Machine> Next;
@@ -50,51 +51,66 @@ public class QueueofProducts implements Observer {
         return Next;
     }
 
-    void AddProduct(Product product) {
+    void AddProduct(Product product){
         Products.add(product);
     }
 
-    void AddNext(Machine M) {
+    void AddNext(Machine M){
         Next.add(M);
     }
 
-    void AddPrev(Machine M) {
+    void AddPrev(Machine M){
         Prev.add(M);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
+    public  void updateMachines(Machine machine){
+        this.Next.remove(machine);
+        if(machine.ready){
+            this.Next.add(0,machine);
+        }else{
+            this.Next.add(this.Next.size()-1,machine);
+        }
     }
-
     public synchronized void addProductToQueue(Product product) {
-        this.Products.add(product);
-        /*if( Id == 0 ){
-            QueueShape newShape = queueShape.clone();
-            newShape.setProductsInQ(getProductsNumber());
-            notifyUI( newShape );
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        //this.Products.add(product);
+        int index = -1;
+        for (int i = 0; i < this.Next.size(); i++) {
+            if (this.Next.get(i).ready) {
+                this.Next.get(i).ready = false;
+                index = i;
+                break;
             }
-        }*/
+        }
         System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
-        if (this.Next.size() != 0) {
-            Machine machine = this.Next.get(0);
-            System.out.println("M" + machine.getId() + " on peak " + machine.ready);
-            if (machine.ready) {
-                produceProduct(machine);
-                System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
-            }
+
+        if (index != -1) {
+
+            Machine machine = this.Next.get(index);
+            System.out.println("M" + machine.getId() +" on peak " + !machine.ready);
+            produceProduct(machine);
+            System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
+
+
         }
     }
 
-    public void produceProduct(Machine machine) {
-        machine.addProductToMachine(this.Products.remove(), this);
+    public synchronized Product getProduct(){
+        if(!Products.isEmpty()){
+            return Products.remove();
+        }else {
+            return null;
+        }
     }
 
-    public int getProductsNumber() {
+    public void produceProduct(Machine machine){
+        System.out.println("pr in q "+this.Products.size());
+        machine.addProductToMachine(this.Products.remove(),this);
+    }
+
+    public int getProductsNumber(){
         return Products.size();
     }
+
+
 }
