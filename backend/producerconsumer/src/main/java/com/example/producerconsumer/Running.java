@@ -148,6 +148,7 @@ public class Running implements Runnable{
             }else{
                 time[i] = machines.get(i).getMax();
             }
+            System.out.println(machines.get(i).getId()+"MM"+machines.get(i).getPrev().getProducts().peek());
             machines.get(i).start();
         }
         originator.setState(time.toString());

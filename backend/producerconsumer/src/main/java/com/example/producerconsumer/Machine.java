@@ -3,6 +3,9 @@ package com.example.producerconsumer;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Machine implements Runnable {
 
 private int Id;
@@ -17,7 +20,8 @@ private Thread thread;
 private volatile boolean run = true;
 private volatile Product currentProduct;
 boolean ready = true;
-
+        private ExecutorService executorService =
+                Executors.newCachedThreadPool();
 public Machine(int id, Point position) {
         this.Id = id;
         this.Position = position;
@@ -144,10 +148,10 @@ public void setNext(QueueofProducts next) {
 
         private void checkWaitingProducts(){
                 Boolean productFound = false;
-                for(int i=0; i<Prev.getProducts().size(); i++){
-                        Product product = Prev.getProducts().poll();
+                for(int i=0; i<Prev.getProductsNumber(); i++){
+                        Product product = Prev.getProduct();
                         if( product!=null ){
-                                //System.out.println( queue.getProducts().size() + " products waiting in Q" + queue.getId() );
+                                System.out.println( Prev.getProducts().size() + " products waiting in Q" + Prev.getId() );
                                 this.currentProduct = product;
                                 this.setColor(currentProduct.getColor());
                                 productFound = true;
@@ -162,6 +166,7 @@ public void setNext(QueueofProducts next) {
         private void setBusyState(){
                 this.ready=false;
                 this.setColor(currentProduct.getColor());
+                this.notifyInputQueues();
         }
 
         public void consumeProduct(){
@@ -172,13 +177,21 @@ public void setNext(QueueofProducts next) {
         private void setReadyState(){
                 this.ready = true;
                 this.setColor("White");
+                this.notifyInputQueues();
 
         }
 
 
         private void passProductToQueue(){
                 this.Next.AddProduct(this.currentProduct);
+                System.out.println(this.Next.getProducts());
                 currentProduct = null;
+        }
+        private void notifyInputQueues(){
+        Prev.updateMachines(this);
+        Next.updateMachines(this);
+
+
         }
 
 

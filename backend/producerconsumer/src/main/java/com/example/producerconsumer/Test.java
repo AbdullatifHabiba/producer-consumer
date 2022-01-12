@@ -34,13 +34,30 @@ public class Test {
         P1 = new Point(3,2);
         O.AddNode(4, 'M', P1);
         O.Connect(1, 4);
+        ///////////////
+        P1 = new Point(3,12);
+        O.AddNode(5, 'M', P1);
+        O.Connect(1, 5);
+        ///////////
         P1 = new Point(3,6);
         O.AddNode(3, 'Q', P1);
         O.Connect(4, 3);
+        O.Connect(5, 3);
+/////////////////////
+        P1 = new Point(44,6);
+        O.AddNode(7, 'Q', P1);
+      ;
+        ///////////
+        P1 = new Point(7,7);
+        O.AddNode(6, 'M', P1);
+        O.Connect(3, 6);
+        O.Connect(6, 7);
+        //////////////////
         P1 = new Point(2,7);
         O.AddNode(2, 'M', P1);
         O.Connect(2, 3);
         O.Connect(1, 2);
+
         O.queues.get(O.GetQueue(1)).setProducts(products);
         System.out.println(O.machines.get(0).getPrev().getId());
         System.out.println(O.queues.get(0).getNext().get(0).getId());
@@ -53,6 +70,6 @@ public class Test {
 
         Thread th=new Thread(N,"running");
         th.start();
-        System.out.println(th);
+        System.out.println(th.getName());
     }
 }

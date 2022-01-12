@@ -3,7 +3,7 @@ package com.example.producerconsumer;
 import java.awt.*;
 import java.util.*;
 
-public class QueueofProducts implements Observer {
+public class QueueofProducts  {
     int Id;
     private Queue<Product> Products;
 
@@ -63,9 +63,13 @@ public class QueueofProducts implements Observer {
         Prev.add(M);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
+    public  void updateMachines(Machine machine){
+        this.Next.remove(machine);
+        if(machine.ready){
+            this.Next.add(0,machine);
+        }else{
+            this.Next.add(this.Next.size()-1,machine);
+        }
     }
     public synchronized void addProductToQueue(Product product) {
         this.Products.add(product);
@@ -80,18 +84,28 @@ public class QueueofProducts implements Observer {
             }
         }*/
 
+
         System.out.println(product.getId() + " " + product.getColor() + " added to " + "Q" + Id);
         if( this.Next.size() != 0 ){
             Machine machine = this.Next.get(0);
+
             System.out.println("M" + machine.getId() +" on peak " + machine.ready);
             if( machine.ready ){
                 produceProduct(machine);
                 System.out.println(product.getId() + " " + product.getColor() + " added to " + "M" + machine.getId());
+            }else {
+                //this.updateMachines();
             }
         }
     }
 
-
+    public synchronized Product getProduct(){
+        if(!Products.isEmpty()){
+            return Products.remove();
+        }else {
+            return null;
+        }
+    }
 
     public void produceProduct(Machine machine){
         machine.addProductToMachine(this.Products.remove(),this);
