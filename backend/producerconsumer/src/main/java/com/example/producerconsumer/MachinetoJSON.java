@@ -19,7 +19,7 @@ public class MachinetoJSON {
             jsonObject.put("id", machines.get(i).getId());
             jsonObject.put("color", machines.get(i).getColor());
             jsonObject.put("next", machines.get(i).getNext().getId());
-            jsonObject.put("prev", machines.get(i).getPrev());
+            jsonObject.put("prev", machines.get(i).getPrev().getId());
             JSONObject JO = new JSONObject();
             JO.put("x", machines.get(i).getPosition().getX());
             JO.put("y", machines.get(i).getPosition().getY());
